@@ -1,0 +1,3 @@
+    <div class="form-container">
+        <?php echo do_shortcode('[custom_form]'); ?>
+    </div>

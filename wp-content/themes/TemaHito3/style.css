@@ -1,58 +1,38 @@
-/*
+/* 
 Theme Name: Hito 3
 Author: Antris
 Description: Para el hito 3
 Version: 1.0
 */
 
-*{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
-
 header {
-    background-color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    background-color: #333; /* Color de fondo */
+    padding: 10px 20px; /* Espaciado alrededor del contenido */
 }
 
 nav {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    height: 70px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    display: flex; /* Utiliza Flexbox para alinear elementos */
+    justify-content: space-between; /* Espaciado entre logo y enlaces */
+    align-items: center; /* Centra verticalmente los elementos */
 }
 
 .logo {
-    font-size: 24px;
-    font-weight: bold;
-    color: #333;
-    text-decoration: none;
+    color: #fff; /* Color del texto del logo */
+    font-size: 24px; /* Tamaño de fuente del logo */
+    text-decoration: none; /* Quita el subrayado del enlace */
 }
 
 .nav-links {
-    display: flex;
-    gap: 30px;
+    display: flex; /* Flexbox para alinear enlaces */
 }
 
 .nav-links a {
-    color: #666;
-    text-decoration: none;
-    font-size: 16px;
-    transition: color 0.3s ease;
+    color: #fff; /* Color de los enlaces */
+    text-decoration: none; /* Quita el subrayado de los enlaces */
+    margin-left: 20px; /* Espaciado entre los enlaces */
+    transition: color 0.3s; /* Efecto de transición para el hover */
 }
 
 .nav-links a:hover {
-    color: #000;
+    color: #ff4081; /* Color al pasar el mouse por encima */
 }
-
-/* Opcional: Estilo para link activo */
-.nav-links a.active {
-    color: #000;
-    font-weight: 500;
-}
-
-

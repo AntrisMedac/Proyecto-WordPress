@@ -5,6 +5,7 @@ Description: Para el hito 3
 Version: 1.0
 */
 
+/* Reseteo de márgenes y padding */
 html, body {
     margin: 0;
     padding: 0;
@@ -14,6 +15,7 @@ html, body {
 /* Estilos generales para el body */
 body {
     background-image: url('../TemaHito3/Multimedia/fondo.jpg');
+    padding-top: 60px; /* Añade un espacio superior para evitar que el contenido quede oculto detrás del header */
 }
 
 /* Estilos generales para el header */
@@ -22,7 +24,11 @@ header {
     color: #000000;
     padding: 15px 0;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: 100%; /* Asegura que el header ocupe el ancho total */
+    width: 100vw;
+    overflow: hidden;
+    position: fixed; /* Fija el header en la parte superior */
+    top: 0; /* Alinea el header en la parte superior de la página */
+    z-index: 1000; /* Asegura que el header esté por encima de otros elementos */
 }
 
 /* Estilos para el contenedor de la navegación */
@@ -31,9 +37,10 @@ header nav {
     justify-content: space-between;
     align-items: center;
     max-width: 1200px;
-    margin: 0 auto; /* Centra el contenido de la navegación */
+    margin: 0 auto;
     padding: 0 20px;
 }
+
 
 /* Estilos para el logo */
 header .logo {

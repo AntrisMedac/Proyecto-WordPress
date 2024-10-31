@@ -5,25 +5,42 @@ function my_theme_enqueue_styles() {
 }
 add_action('wp_enqueue_scripts', 'my_theme_enqueue_styles');
 
-// function cookie_carrito() {
-//     $nombre_cookie = 'carrito_usuario';
+function iniciar_sesion_wp() {
+    if (!session_id()) {
+        session_start();
+    }
+}
+add_action('init', 'iniciar_sesion_wp');
 
-//     if (!is_user_logged_in()) {
-//         $carrito = WC()->cart->get_cart();
+// Guardar datos en la sesión
+function guardar_datos_sesion() {
+    if (is_user_logged_in()) {
+        $_SESSION['nombre_usuario'] = wp_get_current_user()->display_name;
+    }
+}
+add_action('init', 'guardar_datos_sesion');
 
-//         $productos_carrito = array();
-//         foreach ($carrito as $item) {
-//             $productos_carrito[] = $item['product_id'];
-//         }
+// Crear o actualizar una cookie con la cantidad de productos en el carrito
+function actualizar_cookie_carrito() {
+    // Verificamos que el carrito esté activo
+    if (WC()->cart) {
+        $cantidad_productos = WC()->cart->get_cart_contents_count();
 
-//         $valor_cookie = json_encode($productos_carrito);
+        // Configuramos la cookie con la cantidad de productos, expira en 1 día
+        setcookie('cantidad_productos_carrito', $cantidad_productos, time() + 86400, "/");
 
-//         $duracion_cookie = time() + (86400 * 365);
+        // Hacer que la cookie esté disponible de inmediato para la sesión actual
+        $_COOKIE['cantidad_productos_carrito'] = $cantidad_productos;
+    }
+}
+add_action('woocommerce_after_calculate_totals', 'actualizar_cookie_carrito');
 
-//         if (!isset($_COOKIE[$nombre_cookie])) {
-//             setcookie($nombre_cookie, $valor_cookie, $duracion_cookie, "/");
-//         }
-//     }
-// }
-// add_action('init', 'configurar_cookie_carrito');
+// Mostrar la cantidad de productos en el carrito usando la cookie
+function mostrar_productos_carrito_cookie() {
+    if (isset($_COOKIE['cantidad_productos_carrito'])) {
+        $cantidad = intval($_COOKIE['cantidad_productos_carrito']);
+        echo '<p class="productos-carrito">Productos en el carrito: ' . esc_html($cantidad) . '</p>';
+    }
+}
+add_action('wp_head', 'mostrar_productos_carrito_cookie');
 

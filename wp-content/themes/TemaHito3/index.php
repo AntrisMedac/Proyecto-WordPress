@@ -18,5 +18,41 @@
                 <a href="<?php echo wc_get_cart_url(); ?>">Carrito (<?php echo WC()->cart->get_cart_contents_count(); ?>)</a>
             </div>
         </nav>
+
+        <?php 
+        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['username']) && !empty($_POST['password'])) {
+            $username = sanitize_user($_POST['username']);
+            $password = $_POST['password'];
+
+            $user = wp_authenticate($username, $password);
+            if (is_wp_error($user)) {
+                echo '<p class="error">Error: ' . esc_html($user->get_error_message()) . '</p>';
+            } else {
+                wp_set_current_user($user->ID);
+                wp_set_auth_cookie($user->ID);
+                wp_redirect(home_url());
+                exit;
+            }
+        }
+        ?>
+
+        <?php 
+        if ( !is_user_logged_in() ) {
+        ?>
+            <div class="login-form">
+                <form method="post" action="<?php echo esc_url($_SERVER['REQUEST_URI']); ?>">
+                    <input type="text" name="username" placeholder="Nombre de usuario" required>
+                    <input type="password" name="password" placeholder="Contraseña" required>
+                    <button type="submit">Iniciar Sesión</button>
+                </form>
+            </div>
+        <?php 
+        } else { 
+            echo '<p>Bienvenido, ' . esc_html(wp_get_current_user()->display_name) . '!</p>';
+            echo '<a href="' . wp_logout_url() . '">Cerrar sesión</a>';
+        }
+        ?>
     </header>
+    <h1>Bienvenidos a la tienda, para comprar dirijase a productos</h1>
 </body>
+</html>

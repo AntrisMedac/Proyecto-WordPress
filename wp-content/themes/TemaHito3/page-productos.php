@@ -8,7 +8,7 @@
     <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?>>
-    <header>
+<header>
         <nav>
             <!-- Usar home_url() para el logo -->
             <a href="<?php echo home_url('/'); ?>" class="logo">E-Commerce</a>

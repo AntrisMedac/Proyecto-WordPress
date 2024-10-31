@@ -20,28 +20,4 @@
             </div>
         </nav>
     </header>
-    <h1>Descubre la Moda que Te Define</h1>
-    <p>¡Bienvenido a nuestra tienda! Aquí encontrarás las últimas tendencias en ropa.</p>
-
-    <h2>Productos Destacados</h2>
-    [Shortcode de WooCommerce para productos destacados]
-
-    <h2>¿Por qué elegirnos?</h2>
-    <ul>
-        <li>Envío gratis en pedidos superiores a 50€</li>
-        <li>Devoluciones fáciles</li>
-        <li>Atención al cliente 24/7</li>
-    </ul>
-
-    <h2>Testimonios</h2>
-    <blockquote>¡Me encanta mi nueva ropa! - Cliente Satisfecho</blockquote>
-
-    <h2>Suscríbete a nuestro boletín</h2>
-    <form>
-    <input type="email" placeholder="Tu correo electrónico">
-    <button type="submit">Suscribirse</button>
-    </form>
-
-    <button><a href="#productos">Comprar Ahora</a></button>
-
 </body>

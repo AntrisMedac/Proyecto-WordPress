@@ -10,13 +10,12 @@
 <body <?php body_class(); ?>>
     <header>
         <nav>
-            <!-- Usar home_url() para el logo -->
             <a href="<?php echo home_url('/'); ?>" class="logo">E-Commerce</a>
             <div class="nav-links">
-                <!-- Usar home_url() para enlaces internos en WordPress -->
                 <a href="<?php echo home_url('/'); ?>">Inicio</a>
                 <a href="<?php echo home_url('/Productos/'); ?>">Productos</a>
                 <a href="<?php echo home_url('/Contacto/'); ?>">Contacto</a>
+                <a href="<?php echo wc_get_cart_url(); ?>">Carrito (<?php echo WC()->cart->get_cart_contents_count(); ?>)</a>
             </div>
         </nav>
     </header>

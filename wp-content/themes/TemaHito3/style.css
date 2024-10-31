@@ -5,20 +5,21 @@ Description: Para el hito 3
 Version: 1.0
 */
 
-/* Reseteo de márgenes y padding */
 html, body {
     margin: 0;
     padding: 0;
     width: 100%;
 }
 
-/* Estilos generales para el body */
-body {
-    background-image: url('../TemaHito3/Multimedia/fondo.jpg');
-    padding-top: 60px; /* Añade un espacio superior para evitar que el contenido quede oculto detrás del header */
+* {
+    box-sizing: border-box;
 }
 
-/* Estilos generales para el header */
+body {
+    background-image: url('../TemaHito3/Multimedia/fondo.jpg');
+    padding-top: 60px;
+}
+
 header {
     background-color: #ffffff;
     color: #000000;
@@ -26,12 +27,11 @@ header {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 100vw;
     overflow: hidden;
-    position: fixed; /* Fija el header en la parte superior */
-    top: 0; /* Alinea el header en la parte superior de la página */
-    z-index: 1000; /* Asegura que el header esté por encima de otros elementos */
+    position: fixed;
+    top: 0;
+    z-index: 1000;
 }
 
-/* Estilos para el contenedor de la navegación */
 header nav {
     display: flex;
     justify-content: space-between;
@@ -41,8 +41,6 @@ header nav {
     padding: 0 20px;
 }
 
-
-/* Estilos para el logo */
 header .logo {
     font-size: 24px;
     color: #000000;
@@ -50,7 +48,6 @@ header .logo {
     font-weight: bold;
 }
 
-/* Estilos para los enlaces de navegación */
 header .nav-links a {
     color: #000000;
     text-decoration: none;
@@ -65,7 +62,6 @@ header .nav-links a:hover {
     border-radius: 4px;
 }
 
-/* Estilos responsivos para pantallas pequeñas */
 @media (max-width: 768px) {
     header nav {
         flex-direction: column;
@@ -80,4 +76,134 @@ header .nav-links a:hover {
     header .nav-links a {
         margin: 10px 0;
     }
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.products {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.product {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    text-align: center;
+    transition: transform 0.2s;
+    width: 300px;
+}
+
+.product:hover {
+    transform: translateY(-5px);
+}
+
+.product-image img {
+    max-width: 100%;
+    border-bottom: 1px solid #eee;
+}
+
+.product h2 {
+    font-size: 1.5em;
+    margin: 10px 0;
+    color: #444;
+}
+
+.product p {
+    font-size: 1.2em;
+    color: #e67e22;
+    margin: 10px 0;
+}
+
+.button,
+.woocommerce .button {
+    display: inline-block;
+    background-color: #e67e22;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.button:hover,
+.woocommerce .button:hover {
+    background-color: #d35400;
+}
+
+.woocommerce-cart {
+    max-width: 1200px;
+    margin: 60px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.woocommerce-cart h1 {
+    text-align: center;
+    color: #333;
+}
+
+.woocommerce-cart table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.woocommerce-cart th,
+.woocommerce-cart td {
+    border: 1px solid #eee;
+    padding: 15px;
+    text-align: left;
+}
+
+.woocommerce-cart th {
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+.woocommerce-cart .button {
+    display: inline-block;
+    background-color: #e67e22;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.woocommerce-cart .button:hover {
+    background-color: #d35400;
+}
+
+.woocommerce-cart .cart_totals {
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 30px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.woocommerce-cart .cart_totals h2 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.woocommerce-cart .product-remove a {
+    color: #e67e22;
+    text-decoration: underline;
+}
+
+.woocommerce-cart .product-remove a:hover {
+    color: #d35400;
 }

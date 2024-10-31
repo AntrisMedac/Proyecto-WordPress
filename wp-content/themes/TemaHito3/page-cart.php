@@ -20,10 +20,8 @@
         </nav>
     </header>
 
-    <h1>Cuentanos tu problema</h1>
-
     <div class="form-container">
-        <?php echo do_shortcode('[custom_form]'); ?>
+        <?php echo do_shortcode('[woocommerce_cart]'); ?>
     </div>
 
     <?php wp_footer(); ?>

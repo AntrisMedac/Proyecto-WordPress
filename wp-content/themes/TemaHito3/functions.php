@@ -22,8 +22,8 @@ add_action('init', 'guardar_datos_sesion');
 
 // Crear o actualizar una cookie con la cantidad de productos en el carrito
 function actualizar_cookie_carrito() {
-    // Verificamos que el carrito esté activo
-    if (WC()->cart) {
+    // Verificamos que WooCommerce y el carrito estén activos
+    if (function_exists('WC') && WC()->cart) {
         $cantidad_productos = WC()->cart->get_cart_contents_count();
 
         // Configuramos la cookie con la cantidad de productos, expira en 1 día
@@ -33,7 +33,7 @@ function actualizar_cookie_carrito() {
         $_COOKIE['cantidad_productos_carrito'] = $cantidad_productos;
     }
 }
-add_action('woocommerce_after_calculate_totals', 'actualizar_cookie_carrito');
+add_action('template_redirect', 'actualizar_cookie_carrito');
 
 // Mostrar la cantidad de productos en el carrito usando la cookie
 function mostrar_productos_carrito_cookie() {

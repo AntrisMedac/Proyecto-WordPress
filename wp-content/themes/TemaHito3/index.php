@@ -54,5 +54,10 @@
         ?>
     </header>
     <h1>Bienvenidos a la tienda, para comprar dirijase a productos</h1>
+
+    <div class="products">
+        <h3>Productos mas vendidos</h3>
+        <?php echo do_shortcode('[productos_mas_vendidos]'); ?>
+    </div>
 </body>
 </html>

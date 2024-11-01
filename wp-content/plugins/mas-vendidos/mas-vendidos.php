@@ -6,7 +6,6 @@
  * Author: Antris
  */
 
- // Registrar el shortcode [productos_mas_vendidos]
 function mostrar_productos_mas_vendidos() {
     ob_start();
     $args = array(

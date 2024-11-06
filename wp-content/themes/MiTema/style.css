@@ -11,3 +11,52 @@ Updated: 2024-11-06 09:56:17
 
 */
 
+@font-face {
+    font-family: 'Thunderdome'; /* El nombre que usarás para referenciarla */
+    src: url('/wp-content/themes/MiTema/fonts/thunderdome.ttf') format('ttf'),
+         url('/wp-content/themes/MiTema/fonts/thunderdome.ttf') format('ttf'); /* Asegúrate de usar la ruta correcta */
+    font-weight: normal; /* Opcional */
+    font-style: normal; /* Opcional */
+}
+
+/* Usa la fuente en los elementos de tu sitio */
+* {
+    font-family: 'MiFuente', sans-serif;
+}
+
+.woocommerce-products-header__title {
+    /* display: none; */
+}
+.woocommerce-LoopProduct-link.woocommerce-loop-product__link{
+    border: 2px;
+    border-radius: 15px;
+    background-color: white;
+}
+
+.wp-block-woocommerce-cart{
+    border: 2px;
+    border-radius: 15px;
+    background-color: white;
+}
+
+.woocommerce-tabs.wc-tabs-wrapper{
+    border: 2px;
+    border-radius: 15px;
+    background-color: white;
+    padding: 5%;
+}
+
+.summary.entry-summary{
+    border: 2px;
+    border-radius: 15px;
+    background-color: white;
+    padding-left: 5%;
+    padding-top: 4.25%;
+    padding-bottom: 4.25%;
+}
+
+.woocommerce-product-gallery__wrapper{
+    border: 2px;
+    border-radius: 15px;
+    background-color: white;
+}

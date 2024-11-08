@@ -2574,3 +2574,9 @@ button.menu-toggle::after {
         padding: 0
     }
 }
+
+#masthead{
+    position: absolute;
+    margin-left: 20px;
+    z-index: 10;
+}

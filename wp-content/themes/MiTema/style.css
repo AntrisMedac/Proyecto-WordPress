@@ -24,9 +24,6 @@ Updated: 2024-11-06 09:56:17
     font-family: 'MiFuente', sans-serif;
 }
 
-.woocommerce-products-header__title {
-    /* display: none; */
-}
 .woocommerce-LoopProduct-link.woocommerce-loop-product__link{
     border: 2px;
     border-radius: 15px;
@@ -56,18 +53,6 @@ Updated: 2024-11-06 09:56:17
 }
 
 .woocommerce-product-gallery__wrapper{
-    border: 2px;
-    border-radius: 15px;
-    background-color: white;
-}
-
-.content-area{
-    border: 2px;
-    border-radius: 15px;
-    background-color: white;
-}
-
-.cuenta{
     border: 2px;
     border-radius: 15px;
     background-color: white;

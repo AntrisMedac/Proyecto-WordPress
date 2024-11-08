@@ -29,9 +29,6 @@
 	<?php do_action( 'storefront_before_header' ); ?>
 
 	<header id="masthead" class="site-header" role="banner" style="<?php storefront_header_styles(); ?>">
-	<a href="http://localhost/wordpress/wp-login.php?loginSocial=google" data-plugin="nsl" data-action="connect" data-redirect="current" data-provider="google" data-popupwidth="600" data-popupheight="600">
-		Iniciar sesión o registrarse
-	</a>
 
 		<?php
 		/**

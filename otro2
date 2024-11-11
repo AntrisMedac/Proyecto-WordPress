@@ -74,27 +74,87 @@ function descuentoCarrito() {
 }
 
 
+
+
+
+
 /*
     Sesiones y cookies - Integrado con WooCommerce
                                                     */
 // Iniciar la sesión
 function iniciarSesion() {
-    if (!session_id()) {
-        session_start(['cookie_lifetime' => 86400]); // 24 horas
+    if ( !session_id() ) {
+        session_start();
     }
 }
 add_action('init', 'iniciarSesion');
 
 
-// Cifrar una contraseña al guardarla
-// function hashearContraseña($password) {
-//     return wp_hash_password($password); // WordPress se encarga del cifrado
-// }
+// Establecer sesión para recordar usuario cuando se loguea
+function recordarUsuario( $user_id ) {
+    $_SESSION['user_logged_in'] = true;
+    $_SESSION['user_id'] = $user_id;
+}
+add_action('wp_login', 'recordarUsuario');
 
-// // Verificar la contraseña
-// function verificarContraseña($password, $hashed_password) {
-//     return wp_check_password($password, $hashed_password); // WordPress verifica la contraseña
-// }
+
+// Verificar si el usuario está logueado
+function verificarLogeado() {
+    return isset( $_SESSION['user_logged_in'] ) && $_SESSION['verificarLogeado'] === true;
+}
+
+
+// Eliminar las variables de sesión al cerrar sesión
+function cerrarSesion() {
+    // Destruir las variables de sesión que has establecido
+    if ( session_id() ) {
+        session_start();
+        // Eliminar las variables de sesión personalizadas
+        unset( $_SESSION['user_logged_in'] );
+        unset( $_SESSION['user_id'] );
+        unset( $_SESSION['user_preferences'] );
+        // Opcionalmente destruir la sesión completamente
+        session_destroy();
+    }
+    // Cerrar sesión en WordPress
+    wp_logout();
+    // Redirigir a la página de inicio después de hacer logout
+    wp_redirect( home_url() );
+    exit();
+}
+add_action( 'wp_logout', 'cerrarSesion' );
+
+
+// Controlar el acceso a las páginas y verificar la sesión
+function check_user_session() {
+    if ( !is_user_logged_in() && !isset($_SESSION['user_logged_in']) ) {
+        // Si el usuario no está logueado y no tiene la sesión personalizada, redirigirlo a la página de inicio de sesión.
+        wp_redirect( home_url( '/mi-cuenta/' ) );
+        exit();
+    }
+}
+add_action( 'template_redirect', 'check_user_session' );
+
+
+// Comprobar si el usuario está logueado al cargar la página
+function checkSesion() {
+    if ( !is_user_logged_in() && !isset($_SESSION['user_logged_in']) ) {
+        wp_redirect( home_url( '/mi-cuenta/' ) );
+        exit();
+    }
+}
+add_action( 'template_redirect', 'checkSesion' );
+
+
+// Cifrar una contraseña al guardarla
+function hashearContraseña($password) {
+    return wp_hash_password($password); // WordPress se encarga del cifrado
+}
+
+// Verificar la contraseña
+function verificarContraseña($password, $hashed_password) {
+    return wp_check_password($password, $hashed_password); // WordPress verifica la contraseña
+}
 
 
 // Se ejecuta al inicio de la página y guarda las preferencias del usuario
@@ -175,6 +235,15 @@ add_filter('woocommerce_login_redirect', 'redireccionarDespuesLogin', 10, 2);
 function redireccionarDespuesLogin($redirect, $user) {
     return home_url('/mi-cuenta');  // Redirige al usuario a su página de cuenta
 }
+
+// Proteger el acceso a la cuenta solo para usuarios registrados
+function restringirAccesoMiCuenta() {
+    if (is_account_page() && !is_user_logged_in()) {
+        wp_redirect(wp_login_url());
+        exit;
+    }
+}
+add_action('template_redirect', 'restringirAccesoMiCuenta');
 
 
 // Añadir un filtro para asegurar que el correo esté validado

@@ -1,100 +1,73 @@
-<?php
-// Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
-
-// BEGIN ENQUEUE PARENT ACTION
-// AUTO GENERATED - Do not modify or remove comment markers above or below:
-
-if ( !function_exists( 'chld_thm_cfg_locale_css' ) ):
-    function chld_thm_cfg_locale_css( $uri ){
-        if ( empty( $uri ) && is_rtl() && file_exists( get_template_directory() . '/rtl.css' ) )
-            $uri = get_template_directory_uri() . '/rtl.css';
-        return $uri;
-    }
-endif;
-add_filter( 'locale_stylesheet_uri', 'chld_thm_cfg_locale_css' );
-
-// END ENQUEUE PARENT ACTION
-
-/*
-    Funciones del carrito
-                            */
-//Calcula cuando tendremos envio gratis.
-add_action('woocommerce_cart_calculate_fees', 'envioGratis', 20);
-function envioGratis() {
-    $total_carrito = WC()->cart->subtotal;
-    $umbral_envio_gratis = 50; // Cambia esto si necesitas otro umbral
-
-    // Verifica si el total del carrito es mayor o igual al umbral
-    if ($total_carrito >= $umbral_envio_gratis) {
-        // Desactiva todas las opciones de envío y establece el envío gratuito
-        foreach (WC()->shipping->get_shipping_methods() as $método) {
-            if ($método->id === 'free_shipping') {
-                $método->enabled = 'yes';
-            } else {
-                $método->enabled = 'no';
-            }
-        }
-    } else {
-        // Reactiva todos los métodos de envío si no se cumple el umbral
-        foreach (WC()->shipping->get_shipping_methods() as $método) {
-            $método->enabled = 'yes';
-        }
-    }
-}
-
-
-//Calcula cunado tendremos que pagar por el envio
-add_action('woocommerce_cart_calculate_fees', 'envioPagado', 20);
-function envioPagado() {
-    $total_carrito = WC()->cart->subtotal;
-    $umbral_envio_gratis = 50; // Cambia esto si necesitas otro umbral
-    $tarifa_envio = 4.99; // Establece el coste de envío cuando el pedido es menor de 50 €
-
-    if ($total_carrito < $umbral_envio_gratis) {
-        // Agrega una tarifa de envío cuando el total del carrito es menor a 50 €
-        WC()->cart->add_fee(__('Gastos de Envío', 'MiTema'), $tarifa_envio);
-    }
-}
-
-
-//Calcula cuando tendremos decuento en la compra
-add_action('woocommerce_cart_calculate_fees', 'descuentoCarrito', 20);
-function descuentoCarrito() {
-    $total_carrito = WC()->cart->subtotal;
-    $umbral_descuento = 100; // Umbral de descuento
-    $porcentaje_descuento = 0.05; // 5% de descuento
-
-    if ($total_carrito > $umbral_descuento) {
-        // Calcula el monto del descuento
-        $descuento = $total_carrito * $porcentaje_descuento;
-        // Añade el descuento al carrito
-        WC()->cart->add_fee(__('Descuento 5%', 'MiTema'), -$descuento);
-    }
-}
-
-
 /*
     Sesiones y cookies - Integrado con WooCommerce
                                                     */
-// Iniciar la sesión
+
+// Inicia la sesión al abrir la página y tiene una duración de 24h
 function iniciarSesion() {
     if (!session_id()) {
-        session_start(['cookie_lifetime' => 86400]); // 24 horas
+        session_start([
+            'cookie_lifetime' => 86400, // 24 horas
+        ]);
+    }
+
+    // WooCommerce maneja sus propias sesiones, nos aseguramos de no interferir
+    if ( ! WC()->session ) {
+        WC()->session = new WC_Session_Handler();
+        WC()->session->init();
+    }
+
+    // Si el usuario ha solicitado "Recordar mi sesión"
+    if (isset($_COOKIE['user_remember_me'])) {
+        $user_token = $_COOKIE['user_remember_me'];
+
+        // Verifica el token con el que guardaste el token de usuario en la base de datos
+        $user_id = verificarToken($user_token);
+        if ($user_id) {
+            // Restaura la sesión del usuario
+            $_SESSION['user_id'] = $user_id;
+            $_SESSION['is_logged_in'] = true;
+        }
     }
 }
 add_action('init', 'iniciarSesion');
 
 
-// Cifrar una contraseña al guardarla
-// function hashearContraseña($password) {
-//     return wp_hash_password($password); // WordPress se encarga del cifrado
-// }
+// Función para verificar el token
+function verificarToken($token) {
+    global $wpdb;
+    $user = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}users WHERE remember_token = %s", $token));
 
-// // Verificar la contraseña
-// function verificarContraseña($password, $hashed_password) {
-//     return wp_check_password($password, $hashed_password); // WordPress verifica la contraseña
-// }
+    if ($user) {
+        return $user->ID;
+    }
+    return false;
+}
+
+
+// Función para gestionar el "Recordar mi sesión" al iniciar sesión
+function recordarSesion($user_id) {
+    // Genera un token único para recordar la sesión
+    $token = bin2hex(random_bytes(32));
+
+    // Guarda este token en la base de datos para este usuario
+    global $wpdb;
+    $wpdb->update(
+        "{$wpdb->prefix}users",
+        ['remember_token' => $token],
+        ['ID' => $user_id]
+    );
+
+    // Establece una cookie con el token
+    setcookie('user_remember_me', $token, time() + (86400 * 30), '/', '', true, true); // Expira en 30 días
+}
+
+
+// Función para cerrar sesión y eliminar la cookie de "Recordar mi sesión"
+function cerrarSesion() {
+    session_destroy();
+    setcookie('user_remember_me', '', time() - 3600, '/', '', true, true); // Eliminar la cookie
+}
+add_action('wp_logout', 'cerrarSesion');
 
 
 // Se ejecuta al inicio de la página y guarda las preferencias del usuario
@@ -117,6 +90,7 @@ function preferenciasUsuario() {
     }
 }
 add_action('init', 'preferenciasUsuario');
+
 
 // Se ejecuta en las páginas de productos de WooCommerce y guarda los últimos 5 productos vistos en una cookie
 function productosVistos() {
@@ -148,6 +122,7 @@ function campoNtelefono() {
     <?php
 }
 
+
 // Validar el campo de teléfono durante el registro
 add_action('woocommerce_register_post', 'validarCampoNtelefono', 10, 3);
 function validarCampoNtelefono($username, $email, $validation_errors) {
@@ -169,6 +144,32 @@ function guardarCampoNtelefono($customer_id) {
     }
 }
 
+/*
+    Autenticación y Gestión de Sesión
+                                        */
+
+// Inicio de sesión seguro: Custom login action
+function login_custom_action($username, $password) {
+    // Verificar las credenciales usando wp_signon(), que maneja el hashing de contraseñas de manera segura
+    $user = wp_signon( array(
+        'user_login'    => $username,
+        'user_password' => $password,
+        'remember'      => true
+    ), false );
+
+    if (is_wp_error($user)) {
+        return false;  // Error de login
+    } else {
+        return $user;  // Usuario autenticado correctamente
+    }
+}
+
+// Cierre de sesión: Función personalizada
+function logout_custom_action() {
+    wp_logout();
+    wp_redirect(home_url()); // Redirige a la página principal después de cerrar sesión
+    exit;
+}
 
 // Redirigir al usuario después de iniciar sesión
 add_filter('woocommerce_login_redirect', 'redireccionarDespuesLogin', 10, 2);
@@ -176,6 +177,18 @@ function redireccionarDespuesLogin($redirect, $user) {
     return home_url('/mi-cuenta');  // Redirige al usuario a su página de cuenta
 }
 
+// Proteger el acceso a la cuenta solo para usuarios registrados
+function restringirAccesoMiCuenta() {
+    if (is_account_page() && !is_user_logged_in()) {
+        wp_redirect(wp_login_url());
+        exit;
+    }
+}
+add_action('template_redirect', 'restringirAccesoMiCuenta');
+
+/*
+    Seguridad Adicional
+                        */
 
 // Añadir un filtro para asegurar que el correo esté validado
 add_filter('woocommerce_registration_errors', 'validarCorreoRegistro', 10, 3);
@@ -197,33 +210,3 @@ function validarContraseñaRegistro($errors, $username, $email) {
     }
     return $errors;
 }
-
-
-
-
-
-
-/*
-    Inciair sesion y registrarte con google
-                                            */
-function configurar_nextend_social_login() {
-    if (class_exists('NextendSocialLogin')) {
-        // Personalizar la apariencia de los botones
-        add_filter('nsl_auth_buttons_style', function($style) {
-            return 'icon'; // Opciones: 'icon', 'full'
-        });
-        
-        // Personalizar la ubicación de los botones
-        add_filter('nsl_auth_buttons_align', function($align) {
-            return 'center'; // Opciones: 'left', 'center', 'right'
-        });
-    }
-}
-add_action('init', 'configurar_nextend_social_login');
-
-function mostraBotonesSociales() {
-    if (function_exists('do_shortcode')) {
-        echo do_shortcode('[nextend_social_login]');
-    }
-}
-add_action('woocommerce_login_form_end', 'mostraBotonesSociales');

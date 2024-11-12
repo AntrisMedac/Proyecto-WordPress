@@ -7,7 +7,7 @@
 
 get_header(); ?>
 
-    <div class="cuenta">
+    <div class="contenedor">
         <?php echo do_shortcode('[woocommerce_my_account]'); ?>
     </div>
 

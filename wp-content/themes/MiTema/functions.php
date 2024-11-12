@@ -86,17 +86,6 @@ function iniciarSesion() {
 add_action('init', 'iniciarSesion');
 
 
-// Cifrar una contraseña al guardarla
-// function hashearContraseña($password) {
-//     return wp_hash_password($password); // WordPress se encarga del cifrado
-// }
-
-// // Verificar la contraseña
-// function verificarContraseña($password, $hashed_password) {
-//     return wp_check_password($password, $hashed_password); // WordPress verifica la contraseña
-// }
-
-
 // Se ejecuta al inicio de la página y guarda las preferencias del usuario
 function preferenciasUsuario() {
     // Guardar preferencias de idioma
@@ -204,13 +193,14 @@ function validarContraseñaRegistro($errors, $username, $email) {
 
 
 /*
-    Inciair sesion y registrarte con google
+    Iniciar sesión y registrarte con Google
                                             */
+
 function configurar_nextend_social_login() {
     if (class_exists('NextendSocialLogin')) {
         // Personalizar la apariencia de los botones
         add_filter('nsl_auth_buttons_style', function($style) {
-            return 'icon'; // Opciones: 'icon', 'full'
+            return 'icon'; // Opciones: 'icon', 'icon_label', 'full'
         });
         
         // Personalizar la ubicación de los botones
@@ -221,9 +211,9 @@ function configurar_nextend_social_login() {
 }
 add_action('init', 'configurar_nextend_social_login');
 
-function mostraBotonesSociales() {
+function mostrarBotonesSociales() {
     if (function_exists('do_shortcode')) {
         echo do_shortcode('[nextend_social_login]');
     }
 }
-add_action('woocommerce_login_form_end', 'mostraBotonesSociales');
+add_action('woocommerce_login_form_end', 'mostrarBotonesSociales');
